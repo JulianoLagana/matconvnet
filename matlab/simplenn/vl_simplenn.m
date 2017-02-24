@@ -196,6 +196,12 @@ function res = vl_simplenn(net, x, dzdy, res, varargin)
 %     the P-th power (e.g. `false`).
 %     - `layer.epsilon` is the regularization parameter for the derivatives.
 %
+%   Reshape layer::
+%     The reshape layer wraps VL_NNRESHAPE(). It has fields:
+%
+%     - 'layer.newDim' is the dimensions to which the input should be
+%     reshaped to.
+%
 %   Custom layer::
 %     This can be used to specify custom layers.
 %
@@ -369,6 +375,9 @@ for i=1:n
         'epsilon', l.epsilon, ...
         'aggregate', l.aggregate, ...
         'instanceWeights', l.instanceWeights) ;
+    
+    case 'reshape'
+      res(i+1).x = vl_nnreshape(res(i).x, l.newDim);
 
     case 'custom'
       res(i+1) = l.forward(l, res(i), res(i+1)) ;
@@ -490,6 +499,9 @@ if doder
           'aggregate', l.aggregate, ...
           'instanceWeights', l.instanceWeights) ;
 
+      case 'reshape'
+        res(i).dzdx = vl_nnreshape(res(i).x, l.newDim, res(i+1).dzdx);
+        
       case 'custom'
         res(i) = l.backward(l, res(i), res(i+1)) ;
 
