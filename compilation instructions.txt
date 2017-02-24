@@ -1,7 +1,7 @@
 NOTE: you need a C++ compiler in MATLAB (mingw does not work, it should be another one). The compiler that I managed to make it work with was the one that comes with VS2015 professional.
 
 
-	1. Download and install Visual Studio 2015 professional (possibly a pirate version, since it has to be the professional edition)
+	1. Download and install Visual Studio 2015 professional (it has to be the professional edition)
 		1. Very important! Make sure to install the Visual C++ things, the installer does not check these by default.
 
 	2. It should work directly after this, but mine didn't. I had to create the following 2 system variables
