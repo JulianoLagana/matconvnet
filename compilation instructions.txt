@@ -1,0 +1,18 @@
+NOTE: you need a C++ compiler in MATLAB (mingw does not work, it should be another one). The compiler that I managed to make it work with was the one that comes with VS2015 professional.
+
+
+	1. Download and install Visual Studio 2015 professional (possibly a pirate version, since it has to be the professional edition)
+		1. Very important! Make sure to install the Visual C++ things, the installer does not check these by default.
+
+	2. It should work directly after this, but mine didn't. I had to create the following 2 system variables
+		1. INCLUDE="C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt"
+		2. LIB="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.10240.0\um\x64;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.10240.0\ucrt\x64"
+
+	3. Now it's also necessary to download CUDA. I don't remember which one I downloaded exactly, but MATLAB tells me it was version 8.0
+	4. Now I was able to run the command   vl_compilenn('enableGpu', true) as the MatConvNet website describes it. It compiles it and now I can use the vl_testnn('gpu', true) command normally.
+	5. Downloaded the latest cudnn files, and put them in a folder structure called "local/cudnn-rc5" inside the root folder of matconvnet
+	6. After that (and only after that, I was not able to perform this in one compilation step only) I ran the command  vl_compilenn('enableGpu', true, 'cudaMethod', 'nvcc', 'enableCudnn', true, 'cudnnRoot', 'local/cudnn-rc5','verbose',2) ;. The compilation then run flawlessly and matconvnet was compiled for cuda + cudnn gpu support.
+	7. Copy the .dll file that came with the cudnn files to the folder matlab/mex in the root folder for matconvnet
+	8. Copy the same .dll of step 7 to window/system32
+	9. Now it passed both the test vl_testnn() and vl_testnn('gpu',true).
+
