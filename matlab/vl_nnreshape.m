@@ -38,7 +38,7 @@ end
 
 dims = horzcat(dims, size(x,4)) ;
 
-if nargin <= 1 || isempty(dzdy)
+if nargin <= 2 || isempty(dzdy)
     y = reshape(x, dims) ;
 else
     y = reshape(dzdy, size(x)) ;
