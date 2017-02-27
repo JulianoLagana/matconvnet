@@ -196,10 +196,18 @@ function res = vl_simplenn(net, x, dzdy, res, varargin)
 %     the P-th power (e.g. `false`).
 %     - `layer.epsilon` is the regularization parameter for the derivatives.
 %
+%   Bilinear sampler layer::
+%     The bilinear sampler layer wraps VL_NNBILINEARSAMPLES(). It has
+%     fields:
+%
+%     - `layer.type` contains the string `'bilinear'`.
+%     - `layer.grid` contains the meshgrid created with create_meshgrid().
+%
 %   Reshape layer::
 %     The reshape layer wraps VL_NNRESHAPE(). It has fields:
 %
-%     - 'layer.newDim' is the dimensions to which the input should be
+%     - `layer.type` contains the string `'reshape'`.
+%     - `layer.newDim` is the dimensions to which the input should be
 %     reshaped to.
 %
 %   Custom layer::
@@ -376,6 +384,9 @@ for i=1:n
         'aggregate', l.aggregate, ...
         'instanceWeights', l.instanceWeights) ;
     
+    case 'bilinear'
+      res(i+1).x = vl_nnbilinearsampler(res(i).x,l.grid);
+    
     case 'reshape'
       res(i+1).x = vl_nnreshape(res(i).x, l.newDim);
 
@@ -498,6 +509,9 @@ if doder
           'epsilon', l.epsilon, ...
           'aggregate', l.aggregate, ...
           'instanceWeights', l.instanceWeights) ;
+      
+      case 'bilinear'
+        res(i).dzdx = vl_nnbilinearsampler(res(i).x, l.grid, res(i+1).dzdx);
 
       case 'reshape'
         res(i).dzdx = vl_nnreshape(res(i).x, l.newDim, res(i+1).dzdx);
