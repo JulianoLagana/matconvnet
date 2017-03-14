@@ -144,7 +144,7 @@ classdef DagNN < matlab.mixin.Copyable
     rebuild(obj)
 
     % Process data with the DagNN
-    initParams(obj)
+    initParams(obj, layers)
     eval(obj, inputs, derOutputs, varargin)
 
     % Get information about the DagNN
