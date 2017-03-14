@@ -168,7 +168,7 @@ assert(isequal(labelSize(1:2), inputSize(1:2))) ;
 assert(labelSize(4) == inputSize(4)) ;
 instanceWeights = [] ;
 switch lower(opts.loss)
-  case {'classerror', 'topkerror', 'log', 'softmaxlog', 'mhinge', 'mshinge'}
+  case {'classerror', 'topkerror', 'log', 'softmaxlog', 'mhinge', 'mshinge', 'iouerror'}
     % there must be one categorical label per prediction vector
     assert(labelSize(3) == 1) ;
 
@@ -249,6 +249,13 @@ if nargin <= 2 || isempty(dzdy)
       t = b + log(exp(-b) + exp(a-b)) ;
     case 'hinge'
       t = max(0, 1 - c.*x) ;
+    case 'iouerror'
+      pred = x > 0;
+      c(c == -1) = 0;
+      U = c | pred;
+      I = c & pred;
+      t = 1-sum(I(:))/sum(U(:));
+      t = t *size(pred,4); % this will later be divided by batch size?          
   end
   if ~isempty(instanceWeights)
     y = instanceWeights(:)' * t(:) ;
@@ -293,6 +300,8 @@ else
       y = - dzdy .* c ./ (1 + exp(c.*x)) ;
     case 'hinge'
       y = - dzdy .* c .* (c.*x < 1) ;
+    case 'iouerror'
+      y = zeroslike(x) ;
   end
 end
 
