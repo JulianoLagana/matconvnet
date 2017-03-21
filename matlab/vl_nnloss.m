@@ -103,6 +103,11 @@ function y = vl_nnloss(x,c,dzdy,varargin)
 %     if class c=+1 is assigned score x and class c=-1 is assigned
 %     score 0.
 %
+%   IoU error:: `iouerror`
+%     L(x,c) = 1-I(p,c)/U(p,c), where I(a,b) and U(a,b) are, respectively,
+%     the intersection and the union of a and b, and p = x > 0. This does
+%     not support ignore labels
+%
 %   VL_NNLOSS(...,'OPT', VALUE, ...) supports these additionals
 %   options:
 %
