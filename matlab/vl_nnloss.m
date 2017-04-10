@@ -255,14 +255,15 @@ if nargin <= 2 || isempty(dzdy)
     case 'hinge'
       t = max(0, 1 - c.*x) ;
     case 'iouerror'
-      pred = x > 0;
-      c(c == -1) = 0;
-      U = c | pred;
-      I = c & pred;
+      pred = single(x > 0);
+      pred(pred == 0) = -1;
+      I = (pred == 1) & (c == 1);
+      U = ((pred == 1) | (c == 1)) & (c ~= 0);
+      
       t = 1-sum(I(:))/sum(U(:));
       t = t *size(pred,4); % this will later be divided by batch size?          
   end
-  if ~isempty(instanceWeights)
+  if ~isempty(instanceWeights) & (opts.loss ~= 'iouerror')
     y = instanceWeights(:)' * t(:) ;
   else
     y = sum(t(:));
